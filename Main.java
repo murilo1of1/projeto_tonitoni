@@ -11,7 +11,7 @@ import Carro.Carro;
 
 public class Main {
     private static List<Carro> carros = new ArrayList<Carro>();
-    private static String[] args = {"Cadastrar Carro", "Listar Carros", "Sair"};
+    private static String[] args = {"Cadastrar Carro", "Listar Carros", "Atualizar Carros", "Deletar Carros", "Sair"};
     public static int opcao;
     public static void main(String[] args) {
         try {
@@ -28,6 +28,12 @@ public class Main {
                         printCarros();
                         break;
                     case 3:
+                        atualizarCarro();
+                        break;
+                    case 4:
+                        deletarCarro();
+                        break;    
+                    case 5:
                         salvarCarros();
                         return;
                     default:
@@ -46,17 +52,6 @@ public class Main {
         }
         System.out.print("Opção: ");
         return Integer.parseInt(System.console().readLine());
-    }
-
-    public static void printCarros(){
-        System.out.println("");
-        System.out.println("-----------------------------");
-        System.out.println("Carros Cadastrados: ");
-        for(Carro carro : Main.carros){
-            System.out.println(carro.toString());
-        }
-        System.out.println("-----------------------------");
-        System.out.println("");        
     }
 
     public static void cadastrarCarro() {
@@ -82,6 +77,17 @@ public class Main {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao cadastrar carro: " + e.getMessage(), e);
         }
+    }
+
+    public static void printCarros(){
+        System.out.println("");
+        System.out.println("-----------------------------");
+        System.out.println("Carros Cadastrados: ");
+        for(Carro carro : Main.carros){
+            System.out.println(carro.toString());
+        }
+        System.out.println("-----------------------------");
+        System.out.println("");        
     }
 
     public static void carregarCarros()  throws Exception {        
@@ -111,5 +117,67 @@ public class Main {
 
         System.out.println("Carros salvos com sucesso!");
         System.out.println("Saindo...");
+    }
+
+    public static void atualizarCarro() {
+        try {
+            System.out.print("Digite o ID do carro que deseja atualizar: ");
+            int id = Integer.parseInt(System.console().readLine());
+    
+            Carro carro = buscarCarroPorId(id);
+            if (carro == null) {
+                System.out.println("Carro com ID " + id + " não encontrado.");
+                return;
+            }
+    
+            System.out.print("Novo modelo (atual: " + carro.getModelo() + "): ");
+            carro.setModelo(System.console().readLine());
+    
+            System.out.print("Nova marca (atual: " + carro.getMarca() + "): ");
+            carro.setMarca(System.console().readLine());
+    
+            System.out.print("Novo ano (atual: " + carro.getAno() + "): ");
+            carro.setAno(System.console().readLine());
+    
+            System.out.print("Nova cor (atual: " + carro.getCor() + "): ");
+            carro.setCor(System.console().readLine());
+    
+            System.out.print("Novo preço (atual: " + carro.getPreco() + "): ");
+            carro.setPreco(Double.parseDouble(System.console().readLine()));
+    
+            System.out.print("Novo custo (atual: " + carro.getCusto() + "): ");
+            carro.setCusto(Double.parseDouble(System.console().readLine()));
+    
+            System.out.println("Carro atualizado com sucesso!");
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar carro: " + e.getMessage(), e);
+        }
+    }
+    
+    public static void deletarCarro() {
+        try {
+            System.out.print("Digite o ID do carro que deseja deletar: ");
+            int id = Integer.parseInt(System.console().readLine());
+    
+            Carro carro = buscarCarroPorId(id);
+            if (carro == null) {
+                System.out.println("Carro com ID " + id + " não encontrado.");
+                return;
+            }
+    
+            Main.carros.remove(carro);
+            System.out.println("Carro deletado com sucesso!");
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar carro: " + e.getMessage(), e);
+        }
+    }
+    
+    private static Carro buscarCarroPorId(int id) {
+        for (Carro carro : Main.carros) {
+            if (carro.getId() == id) {
+                return carro;
+            }
+        }
+        return null;
     }
 }
